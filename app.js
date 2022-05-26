@@ -1,45 +1,39 @@
 const Express=require("express")
 const Mongoose=require("mongoose")
 const Bodyparser=require("body-parser")
-const res=require("express/lib/response")
-const req=require("express/lib/request")
+const { default: mongoose } = require("mongoose")
+
+
+
 var app=Express()
 app.use(Bodyparser.urlencoded({extended:true}))
 app.use(Bodyparser.json())
-var collegemodel=Mongoose.model("colleges",new Mongoose.Schema(
-{
-
-name:String,
-date:String,
-venue:String,
-organiser:String,
-contactNo:String
-
-}    
+var EventModel=Mongoose.model("events",
+new mongoose.Schema(
+    {
+        name:String,
+        date:String,
+        venue:String,
+        organiser:String,
+        contactno:String,
+    }
 ))
-app.post("/eventapp",(req,res)=>{
-var getName=req.body.name
-var getDate=req.body.date
-var getVenue=req.body.venue
-var getOrganiser=req.body.organiser
-var getContactNo=req.body.ContactNo
-data={"name":getName,"date":getDate,"venue":getVenue,"organiser":getOrganiser,"contactNo":getContactNo}
+Mongoose.connect("mongodb+srv://gopika:1234@cluster0.2q4qp.mongodb.net/eventappdb")
+app.post("/api/event",(req,res)=>{
+    var data=req.body
+  let ob=new EventModel(data)
+  ob.save((error,data)=>{
+      if(error){
+      res.send({"status":"error","error":error})
+          
+
+      }
+      else
+      {
+res.send({"status":"success","data":data})
+      }
+  })
 })
-let mycollege=new collegemodel(data)
-mybus.save((error,data)=>{
-mycollege.save((error,data)=>{
-        if(error){
-            res.sendStatus({"status":"error","data":error})
-        }
-        else{
-            res.sendStatus({"status":"success","data":data}) 
-        }
-     } )
-
-
-
-     res.send(data)
-})
-app.listen(5021,()=>{
-    console.log("successed")
+app.listen(4000,()=>{
+    console.log("server is running")
 })
