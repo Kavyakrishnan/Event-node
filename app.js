@@ -19,6 +19,47 @@ new mongoose.Schema(
     }
 ))
 Mongoose.connect("mongodb+srv://gopika:1234@cluster0.2q4qp.mongodb.net/eventappdb")
+
+app.post("/api/view",(req,res)=>{
+    EventModel.find((error,data)=>{
+        if(error)
+        {
+            res.send({"status":error})
+        }
+        else{
+
+            res.send({"status":"success","data":data})
+        }
+    })
+    
+})
+
+app.post("/api/search",(req,res)=>{
+    var getdate=req.body
+    EventModel.find(getdate,(error,data)=>{
+        if(error)
+        {
+            res.send({"status":error})}
+        else
+        {
+            res.send(data)
+           }   
+       })   
+       })
+      
+      
+       app.post("/api/delete",(req,res)=>{
+    var getId=req.body
+    EventModel.findOneAndDelete(getId,(error,data)=>{
+        if(error){
+res.send({"status":error})
+        }
+        else{
+ res.send({"status":"success"})       
+
+        }
+    })
+})
 app.post("/api/event",(req,res)=>{
     var data=req.body
   let ob=new EventModel(data)
